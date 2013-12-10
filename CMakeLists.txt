@@ -12,4 +12,5 @@ include_directories(
 )
 
 add_subdirectory(${PARSER_DIR})
+add_subdirectory(src)
 

@@ -1,0 +1,3 @@
+[submodule "lib/idl-parser"]
+	path = lib/idl-parser
+	url = git@github.com:asenac/idl-parser.git

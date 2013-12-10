@@ -1,7 +1,7 @@
 #include <iostream>
 #include <idlmm.hpp>
 #include <parser/idl_parser.hpp>
-#include "output_file.hpp"
+#include "output_stream.hpp"
 
 using namespace corbasim::idl;
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
         std::cerr << "Error!" << std::endl;
     else
     {
-        output_file adapted("adapted.hpp");
+        output_stream adapted(std::cout);
 
         adapted % "// Generated file";
 
@@ -28,6 +28,10 @@ int main(int argc, char **argv)
             const nested_region r(adapted);
             adapted % "// Nested region";
         }
+
+        adapted % "// A top-level line";
+
+        nested_region(adapted) % "// Another nested region";
     }
 
     delete res;

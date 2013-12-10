@@ -2,38 +2,38 @@
 #define OUTPUT_FILE_HPP
 
 #include <string>
-#include <fstream>
+#include <ostream>
 
 namespace corbasim
 {
 namespace idl
 {
 
-    struct output_file
+    struct output_stream
     {
         enum { INDENT_SIZE = 4 };
-        std::ofstream o;
+        std::ostream& o;
         unsigned int indent_level;
 
-        output_file(const std::string& file_name) :
-            o(file_name.c_str()),
+        output_stream(std::ostream& o_) :
+            o(o_),
             indent_level(0)
         {}
 
-        ~output_file()
+        ~output_stream()
         {
             o << std::endl;
         }
 
         template< typename T >
-        output_file& operator<<(const T& t)
+        output_stream& operator<<(const T& t)
         {
             o << t;
             return *this;
         }
 
         template< typename T >
-        output_file& operator%(const T& t)
+        output_stream& operator%(const T& t)
         {
             o   << std::endl
                 << std::string(indent_level * INDENT_SIZE, ' ')
@@ -44,9 +44,9 @@ namespace idl
 
     struct nested_region
     {
-        output_file& file;
+        output_stream& file;
 
-        nested_region(output_file& file_) : file(file_)
+        nested_region(output_stream& file_) : file(file_)
         {
             ++file.indent_level;
         }
@@ -54,6 +54,20 @@ namespace idl
         ~nested_region()
         {
             --file.indent_level;
+        }
+
+        template< typename T >
+        nested_region& operator<<(const T& t)
+        {
+            file << t;
+            return *this;
+        }
+
+        template< typename T >
+        nested_region& operator%(const T& t)
+        {
+            file % t;
+            return *this;
         }
     };
 
